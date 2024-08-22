@@ -71,10 +71,13 @@ void analyze_csv(const char *file_path) {
     free(buffer);
     fclose(file);
 
-    printf("File: %s\n", file_path);
-    printf("Number of rows (excluding header): %zu\n", num_rows);
-    printf("Number of columns: %zu\n", num_columns);
-    printf("File size: %ld bytes\n", file_size);
+    printf("\e[1mNumber of rows\e[m: %zu\n", num_rows);
+    printf("\e[1mNumber of columns\e[m: %zu\n", num_columns);
+    if (file_size >= 1048576) {
+        printf("\e[1mFile size\e[m: %.2f MB\n", (float)file_size / 1048576);
+    } else {
+        printf("\e[1mFile size\e[m: %.2f KB\n", (float)file_size / 1024);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -85,10 +88,10 @@ int main(int argc, char *argv[]) {
 
     // Basic input validation
     if (strlen(argv[1]) > PATH_MAX) {
-        fprintf(stderr, "File path too long\n");
+        fprintf(stderr, "File path is too long!\n");
         return EXIT_FAILURE;
     }
-    
+
     printf("*********\n");
     printf("Analyzing file: %s\n", argv[1]);
     analyze_csv(argv[1]);
