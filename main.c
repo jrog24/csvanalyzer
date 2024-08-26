@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
+#include <time.h>
 
 #define MAX_LINE_LENGTH 10000
 #define MAX_ROWS 1000000
@@ -48,7 +49,7 @@ void analyze_csv(const char *file_path) {
         return;
     }
 
-    printf("Headers: ");
+    printf("Columns: ");
     char *token = strtok(buffer, ",\n");
     while (token != NULL) {
         num_columns++;
@@ -80,7 +81,13 @@ void analyze_csv(const char *file_path) {
     }
 }
 
+double processing_time(clock_t start, clock_t end)
+{
+    return((double) (end - start)) / CLOCKS_PER_SEC;
+}
 int main(int argc, char *argv[]) {
+
+    clock_t start, end;
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
         return EXIT_FAILURE;
@@ -94,8 +101,11 @@ int main(int argc, char *argv[]) {
 
     printf("*********\n");
     printf("Analyzing file: %s\n", argv[1]);
+    start=clock();
     analyze_csv(argv[1]);
+    end=clock();
     printf("Analysis complete.\n");
+    printf("Processing time: %f seconds\n", processing_time(start, end));
     printf("*********\n");
     return EXIT_SUCCESS;
 }
